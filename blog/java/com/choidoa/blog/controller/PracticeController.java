@@ -5,12 +5,16 @@ import com.choidoa.blog.domain.BlogRepository;
 import com.choidoa.blog.domain.BlogRequestDto;
 import com.choidoa.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Optional;
 
-// 컨트롤러 : URL 을 매핑하고, 비즈니스 로직 함수를 호출하여 view 에 뿌려주는 역할
+@Slf4j
+@Controller
 @RequiredArgsConstructor
 @RestController // 컨트롤러를 JSON 으로 반환하는 컨트롤러로 만든다.
 public class PracticeController {
@@ -18,8 +22,10 @@ public class PracticeController {
     // 업데이트를 위해서는 서비스, 나머지 데이터는 Repository 가 필요하다.
     private final BlogRepository blogRepository;
     private final BlogService blogService;
+//    private String mainPage = "redirect:/";
+//    private Object SpringVersion;
 
-     // 게시글 생성, RequestBody to RequestDto
+    // 게시글 생성, RequestBody to RequestDto
     @PostMapping("/api/blog")
     public Blog createBlog(@RequestBody BlogRequestDto requestDto) {
         Blog blog = new Blog(requestDto);
@@ -32,19 +38,32 @@ public class PracticeController {
         return blogRepository.findAllByOrderByModifiedAtDesc(); // 데이터를 돌려준다.
     }
 
-    // 게시글 수정
-    @PutMapping("/api/blog/{id}")
-    public Long updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto) {
-        blogService.update(id, requestDto);
-        return id;
+    // 게시글 상세보기
+    @GetMapping("/api/blog/{id}")
+    public Optional<Blog> viewBlog(@PathVariable Long id) {
+        log.info("id: {}", id);
+        return blogRepository.findById(id);
     }
+
+
+//    // 게시글 수정
+//    @PutMapping("/api/blog/{id}")
+//    public Long updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto) {
+//        blogService.update(id, requestDto);
+//        return id;
+//    }
 
     // 게시글 삭제
     @DeleteMapping("/api/blog/{id}")
-    // 경로에 있는 변수를 받기 위해 @PathVatiable
+    // 경로에 있는 변수를 받기 위해서 @PathVatiable 어노테이션 추가
     public Long deleteBlog(@PathVariable Long id) {
         blogRepository.deleteById(id);
         return id;
     }
+
+//    @GetMapping("/api/blog/{id}?")
+//    public RedirectView main() {
+//        return new RedirectView("/");
+//    }
 
 }
