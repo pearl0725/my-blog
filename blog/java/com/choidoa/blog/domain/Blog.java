@@ -39,7 +39,8 @@ public class Blog extends Timestamped {
         this.author = requestDto.getAuthor();
     }
 
-    // Update Method
+    // 게시글을 변경하기 위한 클래스, 변경할 데이터의 정보(DTO)를 전달해준다.
+    // findByID 로 찾은 데이터를 담는 정보
     public void update(BlogRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();

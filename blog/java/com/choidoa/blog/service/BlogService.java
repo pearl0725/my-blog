@@ -15,25 +15,14 @@ public class BlogService {
 
     private final BlogRepository blogRepository;
 
-
-    // 데이터베이스에 반영되도록 어노테이션을 추가
+    // 게시글 수정 메서드
     @Transactional
     public Long update(Long id, BlogRequestDto requestDto) {
-        System.out.println(id);
         Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalMonitorStateException("아이디가 존재하지 않습니다.")
+                () -> new IllegalMonitorStateException("변경할 게시글 정보가 없습니다.")
         );
-        System.out.println(blog);
         blog.update(requestDto);
         return blog.getId();
     }
-
-    @Transactional
-    public Long view(Long id) {
-        Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalMonitorStateException("아이디가 존재하지 않습니다.")
-        );
-        return blog.getId();
-    }
-
 }
+

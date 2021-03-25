@@ -48,6 +48,7 @@
 }
 
 html {
+  scroll-behavior: smooth;
   font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
@@ -67,6 +68,7 @@ body {
   color: #212529;
   text-align: left;
   background-color: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -10238,3 +10240,8 @@ form .row:first-child .floating-label-form-group {
 .copyright {
   background-color: #1a252f;
 }
+
+#contact {
+  height: 600px;;
+}
+

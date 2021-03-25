@@ -70,7 +70,7 @@ function addHTML(id, title, author, content, createAt) {
     let tempHTML = `<tr>
                         <td>${id}</td>
 <!--                        <td><a href="javascript:void(0);" onclick="viewPost();">${title}</a></td>-->
-                        <td><a href="board.html?id=${id}" onclick="viewPost()">${title}</a></td>
+                        <td><a href="board.html?id=${id}">${title}</a></td>
                         <td>${author}</td>
                         <td>${createAt}</td>
                         <td>2</td>

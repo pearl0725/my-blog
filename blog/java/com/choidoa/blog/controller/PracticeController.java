@@ -5,23 +5,23 @@ import com.choidoa.blog.domain.BlogRepository;
 import com.choidoa.blog.domain.BlogRequestDto;
 import com.choidoa.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RestController // 컨트롤러를 JSON 으로 반환하는 컨트롤러로 만든다.
 public class PracticeController {
 
-    // 업데이트를 위해서는 서비스, 나머지 데이터는 Repository 가 필요하다.
-    private final BlogRepository blogRepository;
-    private final BlogService blogService;
+    private final BlogRepository blogRepository;    // 데이터 관련 작업
+    private final BlogService blogService;  // 업데이트
 //    private String mainPage = "redirect:/";
 //    private Object SpringVersion;
 
@@ -41,29 +41,28 @@ public class PracticeController {
     // 게시글 상세보기
     @GetMapping("/api/blog/{id}")
     public Optional<Blog> viewBlog(@PathVariable Long id) {
-        log.info("id: {}", id);
+//        log.info("id: {}", id);
         return blogRepository.findById(id);
     }
 
-
-//    // 게시글 수정
-//    @PutMapping("/api/blog/{id}")
-//    public Long updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto) {
-//        blogService.update(id, requestDto);
-//        return id;
-//    }
+    // 게시글 수정 -> 어떤 id 값을 가진 게시글을 삭제할지 요청을 받음. -> Body 영역의 변경된 데이터는 Dto 로 전달된다.
+    @PutMapping("/api/blog/{id}")
+    public Long updateBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto) {
+        blogService.update(id, requestDto); // requestDto 에서 변경해야 할 데이터를 가져온다.
+        return id;
+    }
 
     // 게시글 삭제
     @DeleteMapping("/api/blog/{id}")
-    // 경로에 있는 변수를 받기 위해서 @PathVatiable 어노테이션 추가
     public Long deleteBlog(@PathVariable Long id) {
         blogRepository.deleteById(id);
         return id;
     }
 
+//    @SneakyThrows
 //    @GetMapping("/api/blog/{id}?")
-//    public RedirectView main() {
-//        return new RedirectView("/");
+//    public void mainRe(HttpServletResponse response){
+//        String redirect_uri="/";
+//        response.sendRedirect(redirect_uri);
 //    }
-
 }
