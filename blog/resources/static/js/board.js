@@ -44,23 +44,6 @@ function deletePost(id) {
     })
 }
 
-// function viewPost(id) {
-//     console.log(`id: ${id}`)
-//     $.ajax({
-//         type: "GET",
-//         url: `/api/blog/${id}`,
-//         success: function (response) {
-//             addviewHTML(
-//                 response.id,
-//                 response.title,
-//                 response.author,
-//                 response.content,
-//                 response.createAt
-//             )
-//         }
-//     })
-// }
-
 
 function addviewHTML(id, title, author, content, createAt) {
     let tempHTML = `<div class="row">
@@ -118,7 +101,6 @@ function addviewHTML(id, title, author, content, createAt) {
 }
 
 
-
 function editPost(id) {
     showEdits(id);
     let content = $(`#${id}-content`).text().trim();
@@ -145,16 +127,11 @@ function showEdits(id) {
     $(`#${id}-submit`).show();
 }
 
+
 function submitEdit(id) {
     let content = $(`#${id}-edittitlearea`).val().trim();
     let author = $(`#${id}-editauthorarea`).val().trim();
     let title = $(`#${id}-textarea`).val().trim();
-    // console.log(title, author, content);
-
-    // // 제목도 추가 필요
-    // if (isValidTitle(content) == false) {
-    //     return;
-    // }
 
     let data = {'title':title, 'author':author, 'content': content};
 
