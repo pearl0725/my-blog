@@ -8,5 +8,4 @@ public class BlogRequestDto {
     private String title;
     private String author;
     private String content;
-
 }

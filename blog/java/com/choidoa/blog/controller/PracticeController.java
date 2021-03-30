@@ -5,13 +5,9 @@ import com.choidoa.blog.domain.BlogRepository;
 import com.choidoa.blog.domain.BlogRequestDto;
 import com.choidoa.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +23,10 @@ public class PracticeController {
 
     // 게시글 생성, RequestBody to RequestDto
     @PostMapping("/api/blog")
-    public Blog createBlog(@RequestBody BlogRequestDto requestDto) {
+    public String createBlog(@RequestBody BlogRequestDto requestDto) {
         Blog blog = new Blog(requestDto);
-        return blogRepository.save(blog);   // 생성한 데이터를 저장
+        blogRepository.save(blog);   // 생성한 데이터를 저장
+        return "RedirectView:index";    // 로그인 페이지로 리다이렉트 되지 않도록 index 페이지로 이동
     }
 
     // 게시글 목록 조회
@@ -41,7 +38,6 @@ public class PracticeController {
     // 게시글 상세보기
     @GetMapping("/api/blog/{id}")
     public Optional<Blog> viewBlog(@PathVariable Long id) {
-//        log.info("id: {}", id);
         return blogRepository.findById(id);
     }
 
@@ -58,11 +54,4 @@ public class PracticeController {
         blogRepository.deleteById(id);
         return id;
     }
-
-//    @SneakyThrows
-//    @GetMapping("/api/blog/{id}?")
-//    public void mainRe(HttpServletResponse response){
-//        String redirect_uri="/";
-//        response.sendRedirect(redirect_uri);
-//    }
 }

@@ -62,6 +62,10 @@ function getPost() {
     })
 }
 
+// 데이터 붙히기, 타이틀에는 자바스크립트 함수를 호출하게 해야 하나 ?
+// 아니면 id 파라미터로..?
+// 아이디 파라미터로 넘어갔을 때 전체 게시물이 조회된다....
+// 해당하는 아이디값만 테이블에서 출력될 수 있도록 하면 된다.
 function addHTML(id, title, author, content, createAt) {
     let tempHTML = `<tr>
                         <td>${id}</td>
@@ -72,4 +76,12 @@ function addHTML(id, title, author, content, createAt) {
                     </tr>`
     $('.board-table').append(tempHTML);
 }
+
+
+// $(location).ready(function viewPost(id) {
+//     let link = document.location.href;
+//     console.log(link);
+//     let para = document.location.href.split("?");
+//     console.log(para[1]);
+// })
 
