@@ -72,9 +72,9 @@ function checkSuccess() {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function(response) {
-            // alert("회원가입을 축하드립니다!");
+            alert("회원가입을 축하드립니다!");
             console.log(data)
-            // location.href="/"
+            location.href="/"
         },
         error: function (response) {
             console.log(response)
