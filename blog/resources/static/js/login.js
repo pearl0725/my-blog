@@ -72,12 +72,12 @@ function checkSuccess() {
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function(response) {
-            alert("회원가입을 축하드립니다!");
-            location.href="/"
+            // alert("회원가입을 축하드립니다!");
+            console.log(data)
+            // location.href="/"
         },
         error: function (response) {
-            alert("회원가입을 실패하였습니다.");
-            location.href="/"
+            console.log(response)
         }
     });
 }

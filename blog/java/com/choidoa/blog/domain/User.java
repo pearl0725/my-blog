@@ -5,8 +5,10 @@ import com.choidoa.blog.domain.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Setter
 @Getter // get 함수를 일괄적으로 만들어줍니다.
@@ -15,20 +17,26 @@ import javax.persistence.*;
 public class User {
     // 추상클래스 재정의 하는 방법이 뭐지....????????????????????????ㅜㅜㅜㅜㅜㅜㅜㅜㅜ
 
-    public User(String username, String password, String email, UserRole role) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
         this.kakaoId = null;
     }
 
-    public User(String username, String password, String email, UserRole role, Long kakaoId) {
+    public User(String username, String password, String email, Long kakaoId) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
         this.kakaoId = kakaoId;
+    }
+
+    public User(SignupRequestDto signupRequestDto) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.username = signupRequestDto.getUsername();
+        this.password = encoder.encode(signupRequestDto.getPassword());
+        this.email = signupRequestDto.getEmail();
+        this.kakaoId = null;
     }
 
     // ID가 자동으로 생성 및 증가합니다.
@@ -45,10 +53,6 @@ public class User {
 
     @Column(nullable = false)
     private String email;
-
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private UserRole role;
 
     @Column(nullable = true)
     private Long kakaoId;

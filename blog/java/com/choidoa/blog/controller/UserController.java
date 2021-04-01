@@ -1,23 +1,14 @@
 package com.choidoa.blog.controller;
 
 import com.choidoa.blog.domain.SignupRequestDto;
-import com.choidoa.blog.domain.UserDto;
-import com.choidoa.blog.security.UserDetailsImpl;
 import com.choidoa.blog.service.UserService;
-import com.choidoa.blog.domain.User;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.validation.Valid;
-import java.util.Map;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class UserController {
@@ -56,7 +47,7 @@ public class UserController {
 
     // 회원 가입 요청 처리 API
     @PostMapping("/user/signup")
-    public String registerUser(SignupRequestDto requestDto) {
+    public String registerUser(@RequestBody SignupRequestDto requestDto) {
         System.out.println("테스트임다 : "+ new Gson().toJson(requestDto));
         userService.registerUser(requestDto);
         return "redirect:/";

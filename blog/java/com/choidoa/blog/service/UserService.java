@@ -46,16 +46,8 @@ public class UserService {
         // 패스워드 인코딩
         String password = passwordEncoder.encode(requestDto.getPassword());
         String email = requestDto.getEmail();
-        // 사용자 ROLE 확인
-        UserRole role = UserRole.USER;
-        if (requestDto.isAdmin()) {
-            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-            }
-            role = UserRole.ADMIN;
-        }
 
-        User user = new User(username, password, email, role);
+        User user = new User(username, password, email);
         userRepository.save(user);
     }
 
@@ -83,7 +75,7 @@ public class UserService {
             // ROLE = 사용자
             UserRole role = UserRole.USER;
 
-            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
+            kakaoUser = new User(nickname, encodedPassword, email, kakaoId);
             userRepository.save(kakaoUser);
         }
 
