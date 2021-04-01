@@ -20,7 +20,17 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
+        this.kakaoId = null;
     }
+
+    public User(String username, String password, String email, UserRole role, Long kakaoId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.kakaoId = kakaoId;
+    }
+
     // ID가 자동으로 생성 및 증가합니다.
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
@@ -36,9 +46,11 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    // UserRole 이 뭐지? enum 으로 설정한다고 함... enum 이 뭐더라;;
-    // 상수 클래스..! 왜 이런 상수 클래스를 정의해서 하지? 관리자?
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
+
+    @Column(nullable = true)
+    private Long kakaoId;
+
 }

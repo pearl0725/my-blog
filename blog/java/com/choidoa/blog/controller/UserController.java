@@ -5,6 +5,7 @@ import com.choidoa.blog.domain.UserDto;
 import com.choidoa.blog.security.UserDetailsImpl;
 import com.choidoa.blog.service.UserService;
 import com.choidoa.blog.domain.User;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -40,40 +41,32 @@ public class UserController {
         return "index";
     }
 
+    // 로그인 실패 API
     @GetMapping("/user/login/error")
     public String loginError(Model model) {
         model.addAttribute("loginError", true);
         return "login";
     }
 
-    // 회원 가입 페이지
+    // 회원 가입 API
     @GetMapping("/user/signup")
-    public String signup(UserDto userDto) {
+    public String signup() {
         return "signup";
     }
 
-     회원 가입 요청 처리
+    // 회원 가입 요청 처리 API
     @PostMapping("/user/signup")
-    public String registerUser(@Valid SignupRequestDto requestDto, Errors errors, Model model) {
+    public String registerUser(SignupRequestDto requestDto) {
+        System.out.println("테스트임다 : "+ new Gson().toJson(requestDto));
         userService.registerUser(requestDto);
-        if (errors.hasErrors()) {
-            // 회원가입 실패시 입력 데이터를 유지하도록 함
-            model.addAttribute("userDto", requestDto);
-
-            // 유효성 검사를 통과하지 못한 필드와 메세지를 핸들링, 서비스에 validateHandling 메서드 추가할 것
-            Map<String, String> validatorResult = userService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
-                model.addAttribute(key, validatorResult.get(key));
-            }
-            return "login"; // 회원가입 이후에 메인 페이지가 아닌 로그인 페이지로 이동하게끔 수정
-        }
-
-        userService.signUp(requestDto);
-        return "redirect:/user/login";
+        return "redirect:/";
     }
 
-//    @GetMapping("/user/signup/error")
-//    public String signupError(Model model) {
-//        model.addAttribute("signupError", true);
-//        return "signup";
+    @GetMapping("/user/kakao/callback")
+    public String kakaoLogin(String code) {
+        // authorizedCode: 카카오 서버로부터 받은 인가 코드
+        userService.kakaoLogin(code);
+
+        return "redirect:/";
+    }
 }

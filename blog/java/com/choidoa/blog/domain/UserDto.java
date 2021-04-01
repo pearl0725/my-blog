@@ -18,15 +18,8 @@ public class UserDto {
     // 조건을 만족하지 못할 경우 에러메세지를 반환한다.
 //    private Long id;
 
-    @NotBlank(message = "아이디를 입력해주세요")
     private String username;
-
-    @NotBlank(message = "이메일을 입력해주세요")
-    @Email(message = "이메일 형식에 알맞지 않습니다")
     private String email;
-
-    // @Pattern() 패턴 추가하기!
-    @NotBlank(message = "패스워드를 입력해주세요")
     private String password;
 
     @Builder

@@ -10,59 +10,73 @@
 // 회원가입 페이지 유효성 검사
 function sign_up() {
     let username = $("#username").val()
-    // console.log(username) 잘 가져옴
     let password = $("#password").val()
     let repassword = $("#re-password").val()
     let email = $("#email").val()
 
 
     if (username.length == 0) {
-        alert("아이디를 올바르게 입력해주세요.");
+        $("#username-check").text("아이디를 입력해주세요.").addClass("is-danger").css("color", "crimson")
         $("#username").focus();
-        return false;
+        return;
     } else if (username.trim().length > 11) {
         alert("아이디는 10자 이하로 입력해주세요.");
         $("#username").focus();
-        return false;
+        return;
     }
 
     if (password.length == 0) {
-        alert("패스워드를 올바르게 입력해주세요.");
+        $("#password-check").text("패스워드를 입력해주세요.").addClass("is-danger").css("color", "crimson")
         $("#password").focus();
-        return false;
+        return;
     }
 
-    if (!is_password(password)) {
-        alert("패스워드 형식이 올바르지 않습니다.");
+    if (repassword.length == 0) {
+        $("#password-recheck").text("패스워드를 입력해주세요.").addClass("is-danger").css("color", "crimson")
+        $("#re-password").focus();
+        return;
+    }
+
+    if (is_password(password)) {
+        $("#password-check").text("패스워드에는 닉네임이 포함될 수 없습니다.").addClass("is-danger").css("color", "crimson")
         $("#password").focus();
-        return false;
+        return;
     }
 
     if (password != repassword) {
-        alert("입력한 패스워드가 일치하지 않습니다.");
-        $("#password").focus();
-        return false;
+        $("#password-recheck").text("패스워드 형식이 올바르지 않습니다 .").addClass("is-danger").css("color", "crimson")
+        $("#re-password").focus();
+        return;
     }
 
     if (email == '') {
-        alert("이메일을 올바르게 입력해주세요.");
-        return;
-    } else if (!is_email(email)) {
-        alert("이메일 형식이 올바르지 않습니다.");
+        $("#email-check").text("이메일 형식이 올바르지 않습니다 .").addClass("is-danger").css("color", "crimson")
         return;
     }
 
-    // 모든 조건을 통과했을 경우 해당 URL 로 데이터를 보낸다.
+    // 모든 조건을 통과하면 해당 함수를 실행한다.
+    checkSuccess();
+}
+
+function checkSuccess() {
+    let username = $("#username").val()
+    let password = $("#password").val()
+    let email = $("#email").val()
+
+    let data = {'username':username, 'password':password, 'email':email}
+    console.log(data)
+
     $.ajax({
         type: "POST",
         url: "/user/signup",
-        data: {
-            userid_give: username,
-            password_give: password,
-            email_give: email
-        },
+        contentType: "application/json",
+        data: JSON.stringify(data),
         success: function(response) {
             alert("회원가입을 축하드립니다!");
+            location.href="/"
+        },
+        error: function (response) {
+            alert("회원가입을 실패하였습니다.");
             location.href="/"
         }
     });
@@ -75,9 +89,23 @@ function is_id(asValue) {
     return;
 }
 
-// 정규식을 사용하여 패스워드 검사, 닉네임이랑 같은 값이 들어가있을 경우로 수정하기!
+// 정규식을 사용하여 패스워드 검사, 정규표현식에서 특정 단어를 제외하고 검색을 하려면 아래와 같이 하면 됌.
+// Note that the solution to does not start with "hede"
+// ^(?!hede).*$
 function is_password() {
-    let regExp = /^{4}$/;
+    let username = $("#username").val()
+    let password = $("#password").val()
+
+    // 자바스크립트에서 특정 문자열을 확인하는 방법!
+    // https://electronic-moongchi.tistory.com/13
+    // "문자열".indexOf("찾을문자")
+    if(password.indexOf(username) != -1) {
+        return true;    // 리턴값이 참이면 종속문장을 실행 -> 종속문장 "패스워드에는 닉네임이 포함될 수 없습니다." 임
+    } else {
+        return false;   // 리턴값이 거짓이면 닉네임이 포함이 되어 있지 않다는 것이므로 조건식을 수행하지 않음
+    }
+    // let regExp = /^(?!#${"#username"}).$/;
+    // console.log(/^(?!#${"#username"}).$/)
     return;
 }
 

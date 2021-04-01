@@ -47,10 +47,10 @@ public class Blog extends Timestamped {
         this.author = requestDto.getAuthor();
     }
 
-    @Override
-    public void view(BlogRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
-        this.author = requestDto.getAuthor();
-    }
+//    @Override
+//    public void view(BlogRequestDto requestDto) {
+//        this.title = requestDto.getTitle();
+//        this.content = requestDto.getContent();
+//        this.author = requestDto.getAuthor();
+//    }
 }

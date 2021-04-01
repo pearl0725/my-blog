@@ -53,9 +53,10 @@
             <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">
         </div>
         <div th:if="${signupError}" class="alert alert-danger" role="alert">회원가입에 실패하였습니다.</div>
-        <button id="login-id-submit" onclick="sign_up()">Create account</button>
+        <button id="login-id-submit" type="button" onclick="sign_up()">Create account</button>
+<!--        <button id="login-id-submit" type="button">Create account</button>-->
     </form>
-    <button id="main-button" onclick="location.href='login'">Sign in</button>
+    <button id="main-button" type="button" onclick="location.href='login'">Sign in</button>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>

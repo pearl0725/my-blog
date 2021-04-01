@@ -1,7 +1,13 @@
 package com.choidoa.blog.service;
 
 import com.choidoa.blog.domain.*;
+import com.choidoa.blog.utils.KakaoUserInfo;
+import com.choidoa.blog.utils.KakaoOAuth2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -16,12 +22,16 @@ import java.util.Optional;
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final KakaoOAuth2 kakaoOAuth2;
+    private final AuthenticationManager authenticationManager;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, KakaoOAuth2 kakaoOAuth2, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.kakaoOAuth2 = kakaoOAuth2;
+        this.authenticationManager = authenticationManager;
     }
 
 
@@ -49,19 +59,38 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // 유효성 검사에 실패한 필드들은 Map 자료구조를 이용하여 키값과 에러 메세지를 응답하도록 한다.
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
+    public void kakaoLogin(String authorizedCode) {
+        // 카카오 OAuth2 를 통해 카카오 사용자 정보 조회
+        KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(authorizedCode);
+        Long kakaoId = userInfo.getId();
+        String nickname = userInfo.getNickname();
+        String email = userInfo.getEmail();
 
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
+        // 우리 DB 에서 회원 Id 와 패스워드
+        // 회원 Id = 카카오 nickname
+        String username = nickname;
+        // 패스워드 = 카카오 Id + ADMIN TOKEN
+        String password = kakaoId + ADMIN_TOKEN;
+
+        // DB 에 중복된 Kakao Id 가 있는지 확인
+        User kakaoUser = userRepository.findByKakaoId(kakaoId)
+                .orElse(null);
+
+        // 카카오 정보로 회원가입
+        if (kakaoUser == null) {
+            // 패스워드 인코딩
+            String encodedPassword = passwordEncoder.encode(password);
+            // ROLE = 사용자
+            UserRole role = UserRole.USER;
+
+            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
+            userRepository.save(kakaoUser);
         }
 
-        return validatorResult;
+        // 로그인 처리
+        Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(username, password);
+        Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    public void signUp(@Valid SignupRequestDto userDto) {
-        // 회원가입 비즈니스 로직 구현
-    }
 }
