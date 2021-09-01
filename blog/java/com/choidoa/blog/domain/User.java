@@ -15,7 +15,6 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor // 기본 생성자를 만들어줍니다.
 @Entity // DB 테이블 역할을 합니다.
 public class User {
-    // 추상클래스 재정의 하는 방법이 뭐지....????????????????????????ㅜㅜㅜㅜㅜㅜㅜㅜㅜ
 
     public User(String username, String password, String email) {
         this.username = username;
